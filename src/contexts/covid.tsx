@@ -10,9 +10,10 @@ interface CovidContextData {
   listaPaises: Array<ListaPaisesProps>;
   estado: any;
   estadoSelecionado: any;
+  listaEstadosSelecionados: any;
   setEstadoSelecionado: React.SetStateAction<any>;
   paisSelecionado: any;
-  setPaisSelecionado: React.SetStateAction<any>
+  setPaisSelecionado: React.SetStateAction<any>;
   getEstado: () => void;
   getTodosEstados: () => void;
   getTodosPaises: () => void;
@@ -31,21 +32,25 @@ interface ListaEstadoProps {
 }
 
 interface ListaPaisesProps {
-  country: string,
-  cases: number,
-  confirmed: number,
-  deaths: number,
-  recovered: number,
-  updated_at: string
+  country: string;
+  cases: number;
+  confirmed: number;
+  deaths: number;
+  recovered: number;
+  updated_at: string;
 }
 
 export const CovidContext = createContext({} as CovidContextData);
 const CovidProvider = ({ children }: CovidProviderProps) => {
   const [listaEstados, setListaEstados] = useState<Array<ListaEstadoProps>>([]);
   const [listaPaises, setListaPaises] = useState<Array<ListaPaisesProps>>([]);
-  const [estadoSelecionado, setEstadoSelecionado] = useState<any>(listaEstados[0]);
-  const [paisSelecionado, setPaisSelecionado] = useState<Array<ListaPaisesProps>>([]);
-
+  const [estadoSelecionado, setEstadoSelecionado] = useState<any>(
+    listaEstados[0]
+  );
+  const [listaEstadosSelecionados, setListaEstadosSelecionados] = useState<any>(
+    
+  );
+  const [paisSelecionado, setPaisSelecionado] = useState<any>(listaPaises[0]);
 
   const [estado, setEstado] = useState("");
 
@@ -62,8 +67,7 @@ const CovidProvider = ({ children }: CovidProviderProps) => {
     try {
       const response = await API.get("");
       setListaEstados(response.data.data);
-      setEstadoSelecionado(response.data.data[0])
-      console.log(response.data);
+      setEstadoSelecionado(response.data.data[0]);
     } catch (error) {
       console.log("Erro ao fazer chamado!");
     }
@@ -72,7 +76,7 @@ const CovidProvider = ({ children }: CovidProviderProps) => {
     try {
       const response = await API.get("/countries");
       setListaPaises(response.data.data);
-      console.log(response.data);
+      setPaisSelecionado(response.data.data[0]);
     } catch (error) {
       console.log("Erro ao fazer chamado!");
     }
@@ -80,10 +84,10 @@ const CovidProvider = ({ children }: CovidProviderProps) => {
 
   const getDataEspecifica = useCallback(async (data: any) => {
     const dataEspecifica = moment(data).format("YYYYMMDD");
-    console.log(dataEspecifica);
     try {
       const response = await API.get(`/brazil/${dataEspecifica}`);
       console.log("teste", response.data);
+      setListaEstadosSelecionados(response.data.data)
     } catch (error) {
       console.log("Erro ao fazer chamado!");
     }
@@ -102,7 +106,8 @@ const CovidProvider = ({ children }: CovidProviderProps) => {
         paisSelecionado,
         setPaisSelecionado,
         estadoSelecionado,
-        setEstadoSelecionado
+        setEstadoSelecionado,
+        listaEstadosSelecionados
       }}
     >
       {children}

@@ -1,14 +1,18 @@
+import { SnackbarProvider } from "notistack";
 import DataShow from "./components/DataShow";
-import Tab from "./components/Tab";
 import CovidProvider from "./contexts/covid";
 
 function App() {
   return (
-    <CovidProvider>
-      <div>
-        <DataShow />
-      </div>
-    </CovidProvider>
+    <SnackbarProvider maxSnack={3}>
+      <CovidProvider>
+        <div
+          style={{ width: "100%", height: "100vh", backgroundColor: "#F8F0E5" }}
+        >
+          <DataShow />
+        </div>
+      </CovidProvider>
+    </SnackbarProvider>
   );
 }
 
